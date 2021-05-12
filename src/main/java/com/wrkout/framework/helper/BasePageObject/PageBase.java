@@ -10,6 +10,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
@@ -18,17 +19,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.google.common.base.Function;
 import com.wrkout.framework.helper.Logger.LoggerHelper;
+import com.wrkout.framework.settings.ObjectRepo;
+import com.wrkout.helper.PageObject.LandingPage;
+import com.wrkout.helper.PageObject.LoginPage;
 
 @SuppressWarnings("rawtypes")
-public abstract class PageBase{
-	
+public abstract class PageBase {
+
 	private final Logger log = LoggerHelper.getLogger(PageBase.class);
+
 	private WebDriver driver;
-	
-	private By getFindByAnno(FindBy anno){
+
+	private By getFindByAnno(FindBy anno) {
 		log.info(anno);
 		switch (anno.how()) {
-		
+
 		case CLASS_NAME:
 			return new By.ByClassName(anno.using());
 		case CSS:
@@ -43,18 +48,16 @@ public abstract class PageBase{
 			return new By.ByPartialLinkText(anno.using());
 		case XPATH:
 			return new By.ByXPath(anno.using());
-		default :
+		default:
 			throw new IllegalArgumentException("Locator not Found : " + anno.how() + " : " + anno.using());
 		}
 	}
-	
-	protected By getElemetLocator(Object obj,String element) throws SecurityException,NoSuchFieldException {
+
+	protected By getElemetLocator(Object obj, String element) throws SecurityException, NoSuchFieldException {
 		Class childClass = obj.getClass();
 		By locator = null;
 		try {
-			locator = getFindByAnno(childClass.
-					 getDeclaredField(element).
-					 getAnnotation(FindBy.class));
+			locator = getFindByAnno(childClass.getDeclaredField(element).getAnnotation(FindBy.class));
 		} catch (SecurityException | NoSuchFieldException e) {
 			log.equals(e);
 			throw e;
@@ -62,17 +65,17 @@ public abstract class PageBase{
 		log.debug(locator);
 		return locator;
 	}
-	
-	public void waitForElement(WebElement element,int timeOutInSeconds) {
+
+	public void waitForElement(WebElement element, int timeOutInSeconds) {
 		WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
 		wait.ignoring(NoSuchElementException.class);
 		wait.ignoring(ElementNotVisibleException.class);
 		wait.ignoring(StaleElementReferenceException.class);
 		wait.ignoring(ElementNotFoundException.class);
-		wait.pollingEvery(250,TimeUnit.MILLISECONDS);
+		wait.pollingEvery(250, TimeUnit.MILLISECONDS);
 		wait.until(elementLocated(element));
 	}
-	
+
 	private Function<WebDriver, Boolean> elementLocated(final WebElement element) {
 		return new Function<WebDriver, Boolean>() {
 
@@ -83,20 +86,65 @@ public abstract class PageBase{
 			}
 		};
 	}
-	
+
 	public PageBase(WebDriver driver) {
-		if(driver == null)
+		if (driver == null)
 			throw new IllegalArgumentException("Driver object is null");
-		
+
 		PageFactory.initElements(new AjaxElementLocatorFactory(driver, 10), this);
 		this.driver = driver;
 	}
-	
-	public boolean checkForTitle(String title){
+
+	public boolean checkForTitle(String title) {
 		log.info(title);
-		if(title == null || title.isEmpty())
+		if (title == null || title.isEmpty())
 			throw new IllegalArgumentException(title);
 		return driver.getTitle().trim().contains(title);
 	}
-	
+
+	public void LoginAdminApp() {
+
+		ObjectRepo.driver.get(ObjectRepo.reader.getAdminWebsite());
+		
+		enterUserName(ObjectRepo.reader.getAdminUserName());
+		enterPass(ObjectRepo.reader.getAdminPassword());
+		ClickSignIn();
+		
+		System.out.println(ObjectRepo.driver +"LoginAdminApp");
+		
+		/*
+		 * logPage.enterUserName(ObjectRepo.reader.getAdminUserName());
+		 * logPage.enterPass(ObjectRepo.reader.getAdminPassword());
+		 * logPage.ClickSignIn();
+		 */
+
+	}
+
+	public void enterUserName(String username) {
+		emailAddress.sendKeys(username);
+		log.info(username);
+	}
+
+	public void enterPass(String userpwd) {
+		password.sendKeys(userpwd);
+		log.info(password);
+	}
+
+	public void ClickSignIn() {
+		signInButton.click();
+		log.info(signInButton);
+	}
+
+	@FindBy(xpath = "//input[@id='email']")
+	@CacheLookup
+	private WebElement emailAddress;
+
+	@FindBy(xpath = "//input[@id='password']")
+	@CacheLookup
+	private WebElement password;
+
+	@FindBy(xpath = "//button[@id='next']")
+	@CacheLookup
+	private WebElement signInButton;
+
 }

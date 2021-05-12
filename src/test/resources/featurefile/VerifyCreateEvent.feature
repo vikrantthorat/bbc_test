@@ -1,4 +1,4 @@
-Feature: Create Event Scenarios 
+Feature: Login
 
 
 Scenario: Verify  user must able to create an event in the application 

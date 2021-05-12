@@ -2,9 +2,7 @@
 package com.wrkout.framework.helper.Wait;
 
 import static com.wrkout.constants.Constants.WAIT_EXPLICIT_SEC;
-
 import java.util.concurrent.TimeUnit;
-
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -15,7 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.google.common.base.Function;
 import com.wrkout.framework.helper.Generic.GenericHelper;
 import com.wrkout.framework.helper.Javascript.JavaScriptHelper;
@@ -23,8 +20,9 @@ import com.wrkout.framework.helper.Logger.LoggerHelper;
 import com.wrkout.framework.interfaces.IconfigReader;
 import com.wrkout.framework.settings.ObjectRepo;
 
+
 /**
- * @author krana
+ * @author SS
  *
  *
  */
@@ -34,6 +32,12 @@ public class WaitHelper extends GenericHelper {
 	private IconfigReader reader;
 	private Logger oLog = LoggerHelper.getLogger(WaitHelper.class);
 
+	By loaderLocator = By.xpath("//div[@id='loading-text']");
+
+	
+	
+	
+	
 	public WaitHelper(WebDriver driver, IconfigReader reader) {
 		super(driver);
 		this.driver = driver;
@@ -86,8 +90,10 @@ public class WaitHelper extends GenericHelper {
 		while (retryCount >= 0) {
 			try {
 				element = driver.findElement(locator);
+				System.out.println("element found");
 				return element;
 			} catch (StaleElementReferenceException e) {
+				System.out.println("stale exception");
 				hardWait(delayInSeconds);
 				retryCount--;
 			}
@@ -133,21 +139,29 @@ public class WaitHelper extends GenericHelper {
 			}
 		};
 	}
+	
+	
+	public  void waitForVisbleOfElement(WebElement webElement) {
+		WebDriverWait wait = new WebDriverWait(ObjectRepo.driver, WAIT_EXPLICIT_SEC);
 
-	public static void waitForElementToBeClickable(WebElement webElement) {
+	}
+	
+
+
+	public  void waitForElementToBeClickable(WebElement webElement) {
 		WebDriverWait wait = new WebDriverWait(ObjectRepo.driver, WAIT_EXPLICIT_SEC);
 		wait.until(ExpectedConditions.elementToBeClickable(webElement));
 
 	}
 	
-	public static void waitForElementToBeClickable(By Xpath) {
+	public  void waitForElementToBeClickable(By Xpath) {
 
-		WebDriverWait wait = new WebDriverWait(ObjectRepo.driver, WAIT_EXPLICIT_SEC);
+		WebDriverWait wait = new WebDriverWait(driver, WAIT_EXPLICIT_SEC);
 		wait.until(ExpectedConditions.elementToBeClickable(Xpath));
-
+		
 	}
 	
-	public static void waitForPresenceOfElement(By Xpath) {
+	public  void waitForPresenceOfElement(By Xpath) {
 
 		WebDriverWait wait = new WebDriverWait(ObjectRepo.driver, WAIT_EXPLICIT_SEC);
 		wait.until(ExpectedConditions.presenceOfElementLocated(Xpath));
@@ -155,9 +169,38 @@ public class WaitHelper extends GenericHelper {
 	}
 	
 
-	
-	
-	
+	public  void waitForVisibility(WebElement element) {
+		WebDriverWait wait = new WebDriverWait(ObjectRepo.driver, WAIT_EXPLICIT_SEC);
+		wait.until(ExpectedConditions.visibilityOf(element));
 
+	}
+	
+	public  void waitForVisibilityLoader() throws InterruptedException {
+		 try {
+	WebDriverWait wait = new WebDriverWait(driver, 5000);
+//	System.out.println("beforevisibility loader");
+	
+	WebElement webElement = driver.findElement(loaderLocator);
+
+	wait.until(ExpectedConditions.visibilityOf(webElement)); // wait for loader to appear
+	wait.until(ExpectedConditions.invisibilityOfElementLocated(loaderLocator)); // wait for loader to disappear
+		 } catch (org.openqa.selenium.TimeoutException e) {
+			// System.out.println("timeout exxception catch");
+		    }
+		 catch(org.openqa.selenium.StaleElementReferenceException e1) {
+			//	System.out.println("beforevisibility loader catch");
+			 handleStaleElement(loaderLocator,5,5);
+			 
+			 waitForVisibilityLoader();
+			 
+
+		 } catch (org.openqa.selenium.NoSuchElementException e) {
+			// System.out.println("no such catch");
+			 waitForVisibilityLoader();
+		    }
+		 
+	}
+
+	
 
 }

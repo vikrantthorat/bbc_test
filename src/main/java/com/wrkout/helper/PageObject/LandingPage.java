@@ -30,21 +30,21 @@ import com.wrkout.framework.helper.BasePageObject.PageBase;
 import com.wrkout.framework.helper.Logger.LoggerHelper;
 import com.wrkout.framework.helper.Wait.WaitHelper;
 import com.wrkout.framework.settings.ObjectRepo;
-
-public class LandingPage extends PageBase {
-
-	private WebDriver driver;
-	WaitHelper wHelper = new WaitHelper(ObjectRepo.driver, null);
-
-	private final static Logger log = LoggerHelper.getLogger(LandingPage.class);
-
-	// String random2 = RandomStringUtils.randomAlphabetic(3);
-
-	public LandingPage(WebDriver driver) {
-		super(driver);
-		this.driver = driver;
-
-	}
+	
+	public class LandingPage extends PageBase {
+	
+		private WebDriver driver;
+		WaitHelper wHelper = new WaitHelper(ObjectRepo.driver, null);
+	
+		private final static Logger log = LoggerHelper.getLogger(LandingPage.class);
+	
+		// String random2 = RandomStringUtils.randomAlphabetic(3);
+	
+		public LandingPage(WebDriver driver) {
+			super(driver);
+			this.driver = driver;
+	
+		}
 	
 	
 
@@ -203,7 +203,7 @@ public class LandingPage extends PageBase {
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(loaderLocator)); // wait for loader to disappear
 
 
-		By tool = By.xpath("	//a[contains(text(),'Tool')]");
+		By tool = By.xpath("//a[contains(text(),'Tool')]");
 		wHelper.waitForPresenceOfElement(tool);
 		
 		//wHelper.waitForElementToBeClickable(welcomeScreentool);

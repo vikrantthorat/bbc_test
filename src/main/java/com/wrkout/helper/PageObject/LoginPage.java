@@ -17,6 +17,7 @@ import com.wrkout.framework.helper.Logger.LoggerHelper;
 public class LoginPage extends PageBase {
 
 	private WebDriver driver;
+
 	private final static Logger log = LoggerHelper.getLogger(LoginPage.class);
 
 	public LoginPage(WebDriver driver) {

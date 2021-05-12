@@ -75,4 +75,48 @@ public class DropDownHelper extends GenericHelper {
 		}
 		return valueList;
 	}
+	
+	
+	public  void selectDataFromListOfDRP(By List, String Text,  By dropdwn) {
+
+		System.out.println("Inside selectSource method");
+		System.out.println(List +"LIST");
+		System.out.println(dropdwn + "DROPDOWN");
+		
+		
+		System.out.println(driver);
+		
+		driver.findElement(dropdwn).click();
+
+		
+		
+		List<WebElement> list = driver.findElements(List);
+
+		for (int i = 0; i < list.size(); i++)
+
+		{
+
+			if (list.get(i).getText().contains(Text)) {
+
+				list.get(i).click();
+
+				break;
+
+			}
+
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
