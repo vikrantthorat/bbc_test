@@ -7,10 +7,12 @@
 	</listeners>
 	<test name="Test - 1">
 		<classes>
-			
-			<class name="com.wrkout.framework.runner.LoginRunner"/>
-			<class name="com.wrkout.framework.runner.CreateEventRunner" />			
 
+			<class name="com.wrkout.framework.runner.LoginRunner" />
+			<class name="com.wrkout.framework.runner.CreateProspectRunner"/>
+			<class name="com.wrkout.framework.runner.CreateMOVRRunner"/>
+			
+			
 		</classes>
 	</test>
 </suite> 	

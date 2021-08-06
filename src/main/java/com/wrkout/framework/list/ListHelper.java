@@ -62,7 +62,7 @@ public class ListHelper extends GenericHelper  {
 
 		{
 
-			// System.out.println(list.get(i).getText());
+			System.out.println(list.get(i).getText());
 			if (list.get(i).getText().contains(Name)) {
 
 				driver.findElement(
@@ -72,6 +72,28 @@ public class ListHelper extends GenericHelper  {
 		}
 	}
 
+	public static void goToMOVRDetailScreen(String Name, By tableXpath ) {
+
+		boolean ismatchfound = false;
+
+		List<WebElement> list = driver.findElements(tableXpath);
+
+		for (int i = 0; i < list.size(); i++)
+
+		{
+
+			System.out.println(list.get(i).getText());
+			if (list.get(i).getText().contains(Name)) {
+
+				driver.findElement(
+						By.xpath("//p[contains(text()," + "'" + Name + "'" + ")]/following::i[position()=3]")).click();
+
+			}
+		}
+	}
+	
+	
+	
 	
 	
 	public void clickByAction( By Xpath) {
