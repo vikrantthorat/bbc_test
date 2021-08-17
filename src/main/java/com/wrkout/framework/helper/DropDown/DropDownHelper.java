@@ -12,17 +12,15 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.wrkout.framework.helper.Generic.GenericHelper;
 import com.wrkout.framework.helper.Logger.LoggerHelper;
+import com.wrkout.framework.helper.Wait.WaitHelper;
+import com.wrkout.framework.settings.ObjectRepo;
 
-
-/**
- * @author krana
- *	
- *
- */
 public class DropDownHelper extends GenericHelper {
 	
 	private WebDriver driver;
 	private Logger oLog = LoggerHelper.getLogger(DropDownHelper.class);
+	 static WaitHelper wHelper = new WaitHelper(ObjectRepo.driver, null);
+
 
 	public DropDownHelper(WebDriver driver) {
 		super(driver);
@@ -79,14 +77,17 @@ public class DropDownHelper extends GenericHelper {
 	
 	public  void selectDataFromListOfDRP(By List, String Text,  By dropdwn) {
 
-		System.out.println("Inside selectSource method");
+		System.out.println("Inside selectDataFromListOfDRP");
 		System.out.println(List +"LIST");
 		System.out.println(dropdwn + "DROPDOWN");
 		
 		
 		System.out.println(driver);
 		
-		driver.findElement(dropdwn).click();
+		wHelper.waitForElementToBeClickableAndClick(dropdwn);
+
+		
+	//	driver.findElement(dropdwn).click();
 
 		
 		
